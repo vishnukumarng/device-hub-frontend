@@ -1,33 +1,34 @@
 import axios from "axios";
 
-// Create axios instance with base URL from Vite env variable
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL
+  baseURL: import.meta.env.VITE_API_BASE_URL,
+  timeout: 2000,
+  headers: {
+    "Content-Type": "application/json",
+  },
 });
 
-// Request interceptor – attach Authorization header if token exists in localStorage
-api.interceptors.request.use(
-  (config) => {
-    const token = localStorage.getItem("auth_token");
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
-    return config;
-  },
-  (error) => Promise.reject(error)
-);
+api.interceptors.request.use((config) => {
+  const token = localStorage.getItem("auth_token");
 
-// Response interceptor – on 401 clear token and redirect to login page
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+
+  return config;
+});
+
 api.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response?.status === 401) {
       localStorage.removeItem("auth_token");
-      // Force navigation to login (simple page reload)
-      window.location.href = "/login";
+
+      window.location.href = "/";
     }
+
     return Promise.reject(error);
-  }
+  },
 );
 
 export default api;
