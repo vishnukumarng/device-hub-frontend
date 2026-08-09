@@ -16,12 +16,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { loginThunk } from "../store/auth/authThunk";
 
 export default function Login() {
-  const { login } = useApp();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const { login: contextLogin } = useApp();
 
   const loading = useSelector((state) => state.auth.loading);
   const error = useSelector((state) => state.auth.error);
@@ -29,19 +28,17 @@ export default function Login() {
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    // setIsLoading(true);
     try {
-      await dispatch(loginThunk({ email, password }));
-
+      const result = await dispatch(loginThunk({ email, password })).unwrap();
       toast.success("Login Successful");
     } catch (error) {
-      toast.error(error);
+      toast.error(error?.message || String(error) || "Login failed");
     }
   };
 
   useEffect(() => {
     if (isAuthenticated) {
-      navigate("/search", { replace: true });
+      navigate("/scan", { replace: true });
     }
   }, [isAuthenticated, navigate]);
 
@@ -81,8 +78,8 @@ export default function Login() {
               required
             />
           </div>
-          <Button type="submit" className="w-full" disabled={isLoading}>
-            {isLoading ? "Signing in…" : "Sign in"}
+          <Button type="submit" className="w-full" disabled={loading}>
+            {loading ? "Signing in…" : "Sign in"}
           </Button>
         </form>
       </CardContent>

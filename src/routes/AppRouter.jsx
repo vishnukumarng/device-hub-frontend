@@ -35,7 +35,7 @@ export default function AppRouter() {
       </Route>
 
       {/* Redirects */}
-      <Route path="/" element={<Navigate to="/scan" replace />} />
+      <Route path="/" element={<Navigate to="/" replace />} />
       <Route path="*" element={<Navigate to="/scan" replace />} />
     </Routes>
   );

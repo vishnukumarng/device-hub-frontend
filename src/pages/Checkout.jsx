@@ -6,8 +6,9 @@ import ExtendDialog from "../components/checkout/ExtendDialog";
 import { useApp } from "../context/AppContext";
 
 export default function Checkout() {
-  const { checkouts, returnDevice, extendCheckout, cancelReservation } = useApp();
-  
+  const { checkouts, returnDevice, extendCheckout, cancelReservation } =
+    useApp();
+
   const [selectedCheckout, setSelectedCheckout] = useState(null);
   const [isReturnOpen, setIsReturnOpen] = useState(false);
   const [isExtendOpen, setIsExtendOpen] = useState(false);

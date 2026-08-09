@@ -1,18 +1,24 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import PageHeader from "../components/common/PageHeader";
 import SearchBar from "../components/device/SearchBar";
 import DeviceFilter from "../components/device/DeviceFilter";
 import DeviceList from "../components/device/DeviceList";
 import { useApp } from "../context/AppContext";
+import { useDispatch, useSelector } from "react-redux";
+import { getalldeviceThunk } from "../store/device/deviceThunk";
 
 export default function Search() {
   const navigate = useNavigate();
-  const { devices } = useApp();
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("ALL");
   const [selectedStatus, setSelectedStatus] = useState("ALL");
   const [isLoading, setIsLoading] = useState(false);
+  const dispatch = useDispatch();
+
+  const { devices } = useSelector((state) => state.device);
+
+  console.log("devices", devices);
 
   // Live filtering of devices
   const filteredDevices = useMemo(() => {
@@ -20,7 +26,7 @@ export default function Search() {
       // 1. Search Query filter
       const matchesSearch =
         device.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        device.serialNumber.toLowerCase().includes(searchQuery.toLowerCase());
+        device.serial_no.toLowerCase().includes(searchQuery.toLowerCase());
 
       // 2. Category filter
       const matchesCategory =
@@ -49,6 +55,10 @@ export default function Search() {
     return () => clearTimeout(timer);
   };
 
+  useEffect(() => {
+    dispatch(getalldeviceThunk());
+  }, []);
+
   return (
     <div className="space-y-4">
       <PageHeader
@@ -58,7 +68,7 @@ export default function Search() {
 
       <div className="space-y-3">
         <SearchBar value={searchQuery} onChange={handleSearchChange} />
-        
+
         <DeviceFilter
           selectedCategory={selectedCategory}
           onSelectCategory={(cat) => {

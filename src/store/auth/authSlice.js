@@ -1,12 +1,13 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { loginThunk } from "./authThunk";
+import { loginThunk, restoreThunk } from "./authThunk";
 
 const initialState = {
   user: null,
   token: null,
-  isAuthenticate: false,
+  isAuthenticated: false,
 
   loading: false,
+  initializing: true,
   error: null,
 };
 
@@ -40,8 +41,9 @@ const authSlice = createSlice({
 
       .addCase(loginThunk.fulfilled, (state, action) => {
         state.loading = false;
-
-        state.user = action.payload.user;
+        state.user = {
+          name: action.payload.name,
+        };
         state.token = action.payload.token;
         state.isAuthenticated = true;
 
@@ -52,7 +54,37 @@ const authSlice = createSlice({
         state.loading = false;
 
         state.error = action.payload || "Something went wrong";
+      })
+
+      .addCase(restoreThunk.pending, (state) => {
+        state.initializing = true;
+        state.error = null;
+      })
+
+      .addCase(restoreThunk.fulfilled, (state, action) => {
+        state.initializing = false;
+
+        state.user = action.payload.user;
+        state.token = action.payload.token;
+        state.isAuthenticated = true;
+
+        state.error = null;
+      })
+
+      .addCase(restoreThunk.rejected, (state, action) => {
+        state.initializing = false;
+
+        state.user = null;
+        state.token = null;
+        state.isAuthenticated = false;
+
+        if (action.payload !== "NO_TOKEN") {
+          state.error =
+            action.payload || "Session expired";
+        }
       });
+
+
   },
 });
 

@@ -1,5 +1,5 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { login } from "../../api/auth.api";
+import { login, getdetails } from "../../api/auth.api";
 
 export const loginThunk = createAsyncThunk(
   "auth/login",
@@ -16,3 +16,30 @@ export const loginThunk = createAsyncThunk(
     }
   },
 );
+
+export const restoreThunk = createAsyncThunk(
+  "auth/restoreSession",
+
+  async (_, thunkAPI) => {
+    try {
+      const token = localStorage.getItem("auth_token");
+
+      if (!token) {
+        return thunkAPI.rejectWithValue("NO_TOKEN");
+      }
+
+      const user = await getdetails();
+
+      return {
+        user,
+        token,
+      };
+    } catch (error) {
+      localStorage.removeItem("auth_token");
+
+      return thunkAPI.rejectWithValue(
+        error.response?.data?.message || "Session expired"
+      );
+    }
+  }
+)

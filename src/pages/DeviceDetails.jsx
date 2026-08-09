@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import {
   ChevronLeft,
@@ -15,12 +15,15 @@ import StatusBadge from "../components/common/StatusBadge";
 import DeviceImage from "../components/device/DeviceImage";
 import Card, { CardContent } from "../components/ui/Card";
 import { useApp } from "../context/AppContext";
+import { useDispatch, useSelector } from "react-redux";
+import { getDeviceById } from "../store/device/deviceThunk";
 
 export default function DeviceDetails() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const {
-    devices,
+    // devices,
     checkouts,
     waitlist,
     checkoutDevice,
@@ -31,7 +34,11 @@ export default function DeviceDetails() {
   const [isReserving, setIsReserving] = useState(false);
   const [reserveTime, setReserveTime] = useState("");
 
-  const device = devices.find((d) => d.id === id);
+  useEffect(() => {
+    dispatch(getDeviceById(id));
+  }, []);
+
+  const { device } = useSelector((state) => state.device);
 
   if (!device) {
     return (
@@ -48,7 +55,7 @@ export default function DeviceDetails() {
     );
   }
 
-  const { name, category, status, serialNumber, location, specs } = device;
+  const { status } = device;
 
   // Check if current user already has this device checked out or is on its waitlist
   const isAlreadyCheckedOut = checkouts.some(
@@ -115,19 +122,19 @@ export default function DeviceDetails() {
       {/* Main card */}
       <Card className="overflow-hidden border-border/80 bg-card">
         {/* Device visual */}
-        <DeviceImage category={category} className="h-52 w-full" />
+        <DeviceImage category={device.category} className="h-52 w-full" />
 
         <CardContent className="p-5 space-y-5">
           {/* Title & Badge */}
           <div className="space-y-1">
             <div className="flex items-start justify-between gap-3">
               <h1 className="text-xl font-bold text-white tracking-tight">
-                {name}
+                {device.name}
               </h1>
-              <StatusBadge status={status} className="mt-0.5" />
+              <StatusBadge status={device.status} className="mt-0.5" />
             </div>
             <p className="text-xs text-muted-foreground capitalize leading-normal">
-              {category?.toLowerCase()}
+              {device.category?.toLowerCase()}
             </p>
           </div>
 
@@ -140,11 +147,11 @@ export default function DeviceDetails() {
                   Serial Number
                 </span>
                 <span className="text-white font-medium truncate">
-                  {serialNumber || "N/A"}
+                  {device.serialNumber || "N/A"}
                 </span>
               </div>
             </div>
-            <div className="flex items-center gap-2 text-muted-foreground">
+            {/* <div className="flex items-center gap-2 text-muted-foreground">
               <MapPin className="w-4 h-4 text-primary/70 shrink-0" />
               <div className="flex flex-col">
                 <span className="text-[10px] text-muted-foreground/60 uppercase font-semibold">
@@ -154,11 +161,11 @@ export default function DeviceDetails() {
                   {location || "Office"}
                 </span>
               </div>
-            </div>
+            </div> */}
           </div>
 
           {/* Specs List */}
-          {specs && specs.length > 0 && (
+          {/* {specs && specs.length > 0 && (
             <div className="space-y-2">
               <h3 className="text-xs font-semibold text-white/90 uppercase tracking-wider flex items-center gap-2">
                 <Cpu className="w-4 h-4 text-primary" /> Technical Specs
@@ -171,7 +178,7 @@ export default function DeviceDetails() {
                 ))}
               </ul>
             </div>
-          )}
+          )} */}
 
           {/* Contextual actions */}
           <div className="space-y-3 pt-2">

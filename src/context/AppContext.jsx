@@ -11,25 +11,40 @@ const INITIAL_DEVICES = [
     status: "AVAILABLE",
     serialNumber: "IP15P-8921",
     location: "Bay A - Shelf 2",
-    specs: ["Apple A17 Pro Chip", "128GB Storage", "Super Retina XDR Display", "USB-C Port"],
+    specs: [
+      "Apple A17 Pro Chip",
+      "128GB Storage",
+      "Super Retina XDR Display",
+      "USB-C Port",
+    ],
   },
   {
     id: "dev-2",
-    name: "MacBook Pro 16\"",
+    name: 'MacBook Pro 16"',
     category: "LAPTOP",
     status: "IN_USE",
     serialNumber: "MBP16-4309",
     location: "Lab 2 - Desk 4",
-    specs: ["Apple M3 Max Chip", "32GB Unified Memory", "1TB SSD Storage", "Liquid Retina XDR"],
+    specs: [
+      "Apple M3 Max Chip",
+      "32GB Unified Memory",
+      "1TB SSD Storage",
+      "Liquid Retina XDR",
+    ],
   },
   {
     id: "dev-3",
-    name: "iPad Pro 12.9\"",
+    name: 'iPad Pro 12.9"',
     category: "TABLET",
     status: "AVAILABLE",
     serialNumber: "IPP12-1102",
     location: "Bay B - Shelf 1",
-    specs: ["Apple M2 Chip", "256GB Storage", "Wi-Fi + Cellular", "Thunderbolt Port"],
+    specs: [
+      "Apple M2 Chip",
+      "256GB Storage",
+      "Wi-Fi + Cellular",
+      "Thunderbolt Port",
+    ],
   },
   {
     id: "dev-4",
@@ -38,7 +53,12 @@ const INITIAL_DEVICES = [
     status: "IN_USE",
     serialNumber: "GP8P-9988",
     location: "Bay A - Shelf 3",
-    specs: ["Google Tensor G3", "12GB RAM", "128GB Storage", "5x Telephoto Camera"],
+    specs: [
+      "Google Tensor G3",
+      "12GB RAM",
+      "128GB Storage",
+      "5x Telephoto Camera",
+    ],
   },
   {
     id: "dev-5",
@@ -47,7 +67,12 @@ const INITIAL_DEVICES = [
     status: "MAINTENANCE",
     serialNumber: "TPX1-0921",
     location: "IT Support Office",
-    specs: ["Intel Core i7-1365U", "16GB LPDDR5 RAM", "512GB PCIe Gen 4 SSD", "Intel Iris Xe"],
+    specs: [
+      "Intel Core i7-1365U",
+      "16GB LPDDR5 RAM",
+      "512GB PCIe Gen 4 SSD",
+      "Intel Iris Xe",
+    ],
   },
   {
     id: "dev-6",
@@ -56,16 +81,16 @@ const INITIAL_DEVICES = [
     status: "AVAILABLE",
     serialNumber: "GS24U-7766",
     location: "Bay A - Shelf 1",
-    specs: ["Snapdragon 8 Gen 3", "12GB RAM", "256GB Storage", "Dynamic AMOLED 2X"],
+    specs: [
+      "Snapdragon 8 Gen 3",
+      "12GB RAM",
+      "256GB Storage",
+      "Dynamic AMOLED 2X",
+    ],
   },
 ];
 
 export function AppProvider({ children }) {
-  const [currentUser, setCurrentUser] = useState(() => {
-    const isLogged = localStorage.getItem("isAuthenticated") === "true";
-    return isLogged ? { name: "Alex Mercer", email: "alex.mercer@company.com" } : null;
-  });
-
   const [devices, setDevices] = useState(INITIAL_DEVICES);
 
   const [checkouts, setCheckouts] = useState([
@@ -75,7 +100,9 @@ export function AppProvider({ children }) {
       device: INITIAL_DEVICES[1],
       type: "CHECKOUT",
       startTime: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
-      expectedReturnTime: new Date(Date.now() + 4 * 60 * 60 * 1000).toISOString(),
+      expectedReturnTime: new Date(
+        Date.now() + 4 * 60 * 60 * 1000,
+      ).toISOString(),
     },
     {
       id: "chk-2",
@@ -83,7 +110,9 @@ export function AppProvider({ children }) {
       device: INITIAL_DEVICES[3],
       type: "CHECKOUT",
       startTime: new Date(Date.now() - 26 * 60 * 60 * 1000).toISOString(),
-      expectedReturnTime: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(), // Overdue
+      expectedReturnTime: new Date(
+        Date.now() - 2 * 60 * 60 * 1000,
+      ).toISOString(), // Overdue
     },
   ]);
 
@@ -106,32 +135,36 @@ export function AppProvider({ children }) {
   ]);
 
   // Handle local storage for auth state to match standard routing redirects
-  useEffect(() => {
-    if (currentUser) {
-      localStorage.setItem("isAuthenticated", "true");
-    } else {
-      localStorage.removeItem("isAuthenticated");
-    }
-  }, [currentUser]);
+  // useEffect(() => {
+  //   if (currentUser) {
+  //     localStorage.setItem("isAuthenticated", "true");
+  //   } else {
+  //     localStorage.removeItem("isAuthenticated");
+  //   }
+  // }, [currentUser]);
 
-  // Auth Operations
-  const login = (email) => {
-    setCurrentUser({
-      name: email.split("@")[0].split(".").map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(" "),
-      email: email,
-    });
-    toast.success("Successfully signed in");
-  };
+  // // Auth Operations
+  // const login = (email) => {
+  //   setCurrentUser({
+  //     name: email
+  //       .split("@")[0]
+  //       .split(".")
+  //       .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+  //       .join(" "),
+  //     email: email,
+  //   });
+  //   toast.success("Successfully signed in");
+  // };
 
-  const logout = () => {
-    setCurrentUser(null);
-    toast.success("Successfully signed out");
-  };
+  // const logout = () => {
+  //   setCurrentUser(null);
+  //   toast.success("Successfully signed out");
+  // };
 
   // Device Operations
   const checkoutDevice = (deviceId) => {
     setDevices((prev) =>
-      prev.map((d) => (d.id === deviceId ? { ...d, status: "IN_USE" } : d))
+      prev.map((d) => (d.id === deviceId ? { ...d, status: "IN_USE" } : d)),
     );
 
     const device = devices.find((d) => d.id === deviceId);
@@ -141,7 +174,9 @@ export function AppProvider({ children }) {
       device,
       type: "CHECKOUT",
       startTime: new Date().toISOString(),
-      expectedReturnTime: new Date(Date.now() + 4 * 60 * 60 * 1000).toISOString(), // 4h duration
+      expectedReturnTime: new Date(
+        Date.now() + 4 * 60 * 60 * 1000,
+      ).toISOString(), // 4h duration
     };
 
     setCheckouts((prev) => [newCheckout, ...prev]);
@@ -152,7 +187,9 @@ export function AppProvider({ children }) {
 
   const reserveDevice = (deviceId, startTimeString) => {
     setDevices((prev) =>
-      prev.map((d) => (d.id === deviceId ? { ...d, status: "RESERVATION" } : d))
+      prev.map((d) =>
+        d.id === deviceId ? { ...d, status: "RESERVATION" } : d,
+      ),
     );
 
     const device = devices.find((d) => d.id === deviceId);
@@ -161,8 +198,11 @@ export function AppProvider({ children }) {
       deviceId,
       device,
       type: "RESERVATION",
-      startTime: startTimeString || new Date(Date.now() + 60 * 60 * 1000).toISOString(),
-      expectedReturnTime: new Date(Date.now() + 2 * 60 * 60 * 1000).toISOString(),
+      startTime:
+        startTimeString || new Date(Date.now() + 60 * 60 * 1000).toISOString(),
+      expectedReturnTime: new Date(
+        Date.now() + 2 * 60 * 60 * 1000,
+      ).toISOString(),
     };
 
     setCheckouts((prev) => [newReservation, ...prev]);
@@ -190,14 +230,18 @@ export function AppProvider({ children }) {
     const { deviceId, device } = checkout;
 
     // Check if anyone is waiting
-    const waitingIndex = waitlist.findIndex((w) => w.deviceId === deviceId && w.status === "PENDING");
-    
+    const waitingIndex = waitlist.findIndex(
+      (w) => w.deviceId === deviceId && w.status === "PENDING",
+    );
+
     setDevices((prev) => {
       let nextStatus = "AVAILABLE";
       if (waitingIndex !== -1) {
         nextStatus = "AVAILABLE"; // Actually waitlist will notify, so device status transitions or stays available
       }
-      return prev.map((d) => (d.id === deviceId ? { ...d, status: nextStatus } : d));
+      return prev.map((d) =>
+        d.id === deviceId ? { ...d, status: nextStatus } : d,
+      );
     });
 
     setCheckouts((prev) => prev.filter((c) => c.id !== checkout.id));
@@ -206,8 +250,8 @@ export function AppProvider({ children }) {
     if (waitingIndex !== -1) {
       setWaitlist((prev) =>
         prev.map((w, index) =>
-          index === waitingIndex ? { ...w, status: "NOTIFIED" } : w
-        )
+          index === waitingIndex ? { ...w, status: "NOTIFIED" } : w,
+        ),
       );
       toast.success(`${device.name} returned. Notified waitlisted user.`);
     } else {
@@ -219,18 +263,22 @@ export function AppProvider({ children }) {
     setCheckouts((prev) =>
       prev.map((c) => {
         if (c.id === checkout.id) {
-          const newTime = new Date(new Date(c.expectedReturnTime).getTime() + extraMinutes * 60 * 1000).toISOString();
+          const newTime = new Date(
+            new Date(c.expectedReturnTime).getTime() + extraMinutes * 60 * 1000,
+          ).toISOString();
           return { ...c, expectedReturnTime: newTime };
         }
         return c;
-      })
+      }),
     );
     toast.success(`Checkout extended by ${extraMinutes} minutes`);
   };
 
   const cancelReservation = (checkout) => {
     setDevices((prev) =>
-      prev.map((d) => (d.id === checkout.deviceId ? { ...d, status: "AVAILABLE" } : d))
+      prev.map((d) =>
+        d.id === checkout.deviceId ? { ...d, status: "AVAILABLE" } : d,
+      ),
     );
     setCheckouts((prev) => prev.filter((c) => c.id !== checkout.id));
     toast.success(`Reservation for ${checkout.device.name} cancelled`);
@@ -248,12 +296,12 @@ export function AppProvider({ children }) {
   return (
     <AppContext.Provider
       value={{
-        currentUser,
+        // currentUser,
         devices,
         checkouts,
         waitlist,
-        login,
-        logout,
+        // login,
+        // logout,
         checkoutDevice,
         reserveDevice,
         joinWaitlist,
