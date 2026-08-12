@@ -30,11 +30,18 @@ export default function WaitlistListItem({ entry, onCancel, onCheckout }) {
   return (
     <ItemCard
       icon={isNotified ? Bell : Icon}
-      iconBgColor={isNotified ? "bg-success/15 border-success/30" : "bg-warning/15 border-warning/30"}
+      iconBgColor={
+        isNotified
+          ? "bg-success/15 border-success/30"
+          : "bg-warning/15 border-warning/30"
+      }
       iconColor={isNotified ? "text-success" : "text-warning"}
       title={device?.name || "Device"}
       subtitle={getSubtitle()}
-      className={cn(isNotified && "border-success/50 bg-success/5 shadow-[0_0_15px_rgba(34,197,94,0.05)]")}
+      className={cn(
+        isNotified &&
+          "border-success/50 bg-success/5 shadow-[0_0_15px_rgba(34,197,94,0.05)]",
+      )}
       actions={
         !isNotified ? (
           <button

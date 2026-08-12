@@ -24,15 +24,18 @@ export default function CheckoutList({
     );
   }
 
-  const activeCheckouts = checkouts.filter((c) => c.type === "CHECKOUT");
-  const reservations = checkouts.filter((c) => c.type === "RESERVATION");
+  console.log("checkouts", checkouts);
+
+  const activeCheckouts = checkouts.filter((c) => c.status === "ACTIVE");
+  // const reservations = checkouts.filter((c) => c.type === "RESERVATION");
 
   return (
     <div className="space-y-6">
       {/* Active Checkouts Section */}
       <div className="space-y-2.5">
         <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider flex items-center gap-1.5 px-0.5">
-          <ListChecks className="w-3.5 h-3.5 text-primary" /> Active Checkouts ({activeCheckouts.length})
+          <ListChecks className="w-3.5 h-3.5 text-primary" /> Active Checkouts (
+          {activeCheckouts.length})
         </h3>
         {activeCheckouts.length === 0 ? (
           <div className="p-4 rounded-xl border border-dashed border-border bg-white/[0.01] text-center text-xs text-muted-foreground py-6 select-none">
@@ -53,9 +56,10 @@ export default function CheckoutList({
       </div>
 
       {/* Reservations Section */}
-      <div className="space-y-2.5">
+      {/* <div className="space-y-2.5">
         <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider flex items-center gap-1.5 px-0.5">
-          <CalendarClock className="w-3.5 h-3.5 text-warning" /> Reservations ({reservations.length})
+          <CalendarClock className="w-3.5 h-3.5 text-warning" /> Reservations (
+          {reservations.length})
         </h3>
         {reservations.length === 0 ? (
           <div className="p-4 rounded-xl border border-dashed border-border bg-white/[0.01] text-center text-xs text-muted-foreground py-6 select-none">
@@ -72,7 +76,7 @@ export default function CheckoutList({
             ))}
           </div>
         )}
-      </div>
+      </div> */}
     </div>
   );
 }

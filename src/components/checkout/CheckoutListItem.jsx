@@ -1,9 +1,16 @@
-import { Laptop, Smartphone, Tablet, CalendarClock, X, ArrowUpRight } from "lucide-react";
+import {
+  Laptop,
+  Smartphone,
+  Tablet,
+  CalendarClock,
+  X,
+  ArrowUpRight,
+} from "lucide-react";
 import Button from "../ui/Button";
 import ItemCard from "../common/ItemCard";
 
 const CATEGORY_ICONS = {
-  LAPTOP: Laptop,
+  laptop: Laptop,
   SMARTPHONE: Smartphone,
   PHONE: Smartphone,
   TABLET: Tablet,
@@ -15,10 +22,10 @@ export default function CheckoutListItem({
   onExtend,
   onCancel,
 }) {
-  const { device, type, startTime, expectedReturnTime } = checkout;
-  const isReservation = type === "RESERVATION";
+  const { device, status, startTime, expectedReturnTime } = checkout;
+  const isReservation = status === "RESERVATION";
   const Icon = CATEGORY_ICONS[device?.category?.toUpperCase()] ?? Laptop;
-
+  console.log(checkout);
   // Format date helper
   const formatTime = (timeStr) => {
     try {

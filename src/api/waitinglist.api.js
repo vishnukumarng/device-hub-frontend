@@ -3,7 +3,7 @@ import api from "./axios";
 export async function waitingList() {
     const response = await api.get('/reservation/me')
 
-    return response.data.data;
+    return response.data;
 }
 
 export async function joinWaitingList(credentials) {

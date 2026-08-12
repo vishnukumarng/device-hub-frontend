@@ -17,6 +17,8 @@ import Card, { CardContent } from "../components/ui/Card";
 import { useApp } from "../context/AppContext";
 import { useDispatch, useSelector } from "react-redux";
 import { getDeviceById } from "../store/device/deviceThunk";
+import { bookDevice, fetchCheckouts } from "../store/checkout/checkoutThunk";
+import { fetchWaitingList } from "../store/waitlist/waitlistThunk";
 
 export default function DeviceDetails() {
   const { id } = useParams();
@@ -24,9 +26,9 @@ export default function DeviceDetails() {
   const dispatch = useDispatch();
   const {
     // devices,
-    checkouts,
-    waitlist,
-    checkoutDevice,
+    // checkouts,
+    // waitlist,
+    // checkoutDevice,
     reserveDevice,
     joinWaitlist,
   } = useApp();
@@ -36,9 +38,13 @@ export default function DeviceDetails() {
 
   useEffect(() => {
     dispatch(getDeviceById(id));
-  }, []);
+    dispatch(fetchCheckouts());
+    dispatch(fetchWaitingList());
+  }, [dispatch, id]);
 
   const { device } = useSelector((state) => state.device);
+  const { checkouts } = useSelector((state) => state.checkout);
+  const { waitinglist } = useSelector((state) => state.reservation);
 
   if (!device) {
     return (
@@ -64,11 +70,15 @@ export default function DeviceDetails() {
   const isAlreadyReserved = checkouts.some(
     (c) => c.deviceId === device.id && c.type === "RESERVATION",
   );
-  const isAlreadyWaitlisted = waitlist.some((w) => w.deviceId === device.id);
+  const isAlreadyWaitlisted = waitinglist.some((w) => w.deviceId === device.id);
 
-  const handleCheckout = () => {
-    checkoutDevice(device.id);
-    navigate("/checkouts");
+  const handleCheckout = async () => {
+    try {
+      await dispatch(bookDevice({ deviceId: device.id })).unwrap();
+      navigate("/checkouts");
+    } catch (err) {
+      console.error("Checkout failed:", err);
+    }
   };
 
   const handleReserveSubmit = (e) => {
@@ -82,8 +92,8 @@ export default function DeviceDetails() {
     navigate("/checkouts");
   };
 
-  const handleJoinWaitlist = () => {
-    joinWaitlist(device.id);
+  const handleJoinWaitlist = async () => {
+    // dispatch(jo)
     navigate("/waitlist");
   };
 

@@ -1,9 +1,20 @@
+import { useDispatch, useSelector } from "react-redux";
 import PageHeader from "../components/common/PageHeader";
 import WaitlistList from "../components/waitlist/WaitlistList";
 import { useApp } from "../context/AppContext";
+import { useEffect } from "react";
+import { fetchWaitingList } from "../store/waitlist/waitlistThunk";
 
 export default function Waitlist() {
-  const { waitlist, leaveWaitlist, claimWaitlistDevice } = useApp();
+  const { leaveWaitlist, claimWaitlistDevice } = useApp();
+
+  const { waitinglist } = useSelector((state) => state.reservation);
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(fetchWaitingList());
+  }, []);
 
   return (
     <div className="space-y-4">
@@ -13,7 +24,7 @@ export default function Waitlist() {
       />
 
       <WaitlistList
-        entries={waitlist}
+        entries={waitinglist}
         isLoading={false}
         onCancel={leaveWaitlist}
         onCheckout={claimWaitlistDevice}
