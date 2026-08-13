@@ -41,6 +41,17 @@ export default function Checkout() {
     setIsExtendOpen(true);
   };
 
+  const handleExtend = async () => {
+    try {
+      const expectedReturnTime = new Date(
+        Date.now() + durationMinutes * 60 * 1000,
+      ).toISOString();
+    } catch (error) {
+      toast.err(err?.message || String(err) || "Checkout failed");
+      console.error("Checkout failed:", err);
+    }
+  };
+
   useEffect(() => {
     dispatch(fetchCheckouts());
   }, [dispatch]);

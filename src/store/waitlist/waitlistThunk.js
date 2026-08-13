@@ -1,5 +1,5 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { waitingList } from "../../api/waitinglist.api";
+import { waitingList, joinWaitingList } from "../../api/waitinglist.api";
 
 
 export const fetchWaitingList = createAsyncThunk(
@@ -12,6 +12,20 @@ export const fetchWaitingList = createAsyncThunk(
             return thunkAPI.rejectWithValue(
                 error.response?.data?.message || "Waiting List Null",
             )
+        }
+    }
+)
+
+export const joinWaitingThunk = createAsyncThunk(
+    'reservation/joinList',
+    async (crendentials, thunkAPI) => {
+        try {
+            const data = await joinWaitingList(crendentials)
+            return data;
+        } catch (error) {
+            return thunkAPI.rejectWithValue(
+                error.response?.data?.message || "Join Waitlist failed",
+            );
         }
     }
 )

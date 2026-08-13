@@ -18,7 +18,11 @@ import { useApp } from "../context/AppContext";
 import { useDispatch, useSelector } from "react-redux";
 import { getDeviceById } from "../store/device/deviceThunk";
 import { bookDevice, fetchCheckouts } from "../store/checkout/checkoutThunk";
-import { fetchWaitingList } from "../store/waitlist/waitlistThunk";
+import {
+  fetchWaitingList,
+  joinWaitingThunk,
+} from "../store/waitlist/waitlistThunk";
+import CheckoutDialog from "../components/checkout/CheckoutDialog";
 
 export default function DeviceDetails() {
   const { id } = useParams();
@@ -30,11 +34,12 @@ export default function DeviceDetails() {
     // waitlist,
     // checkoutDevice,
     reserveDevice,
-    joinWaitlist,
+    // joinWaitlist,
   } = useApp();
 
   const [isReserving, setIsReserving] = useState(false);
   const [reserveTime, setReserveTime] = useState("");
+  const [isCheckout, setIsCheckout] = useState(false);
 
   useEffect(() => {
     dispatch(getDeviceById(id));
@@ -72,11 +77,19 @@ export default function DeviceDetails() {
   );
   const isAlreadyWaitlisted = waitinglist.some((w) => w.deviceId === device.id);
 
-  const handleCheckout = async () => {
+  const handleCheckout = async (durationMinutes) => {
     try {
-      await dispatch(bookDevice({ deviceId: device.id })).unwrap();
+      const expectedReturnTime = new Date(
+        Date.now() + durationMinutes * 60 * 1000,
+      ).toISOString();
+
+      await dispatch(
+        bookDevice({ deviceId: device.id, expectedReturnTime }),
+      ).unwrap();
+      toast.success("Chekcout Successful");
       navigate("/checkouts");
     } catch (err) {
+      toast.err(err?.message || String(err) || "Checkout failed");
       console.error("Checkout failed:", err);
     }
   };
@@ -92,9 +105,16 @@ export default function DeviceDetails() {
     navigate("/checkouts");
   };
 
-  const handleJoinWaitlist = async () => {
-    // dispatch(jo)
-    navigate("/waitlist");
+  const handleJoinWaitlist = async (e) => {
+    e.preventDefault();
+    try {
+      await dispatch(joinWaitingThunk({ deviceId: device.id })).unwrap();
+      toast.success("Added to waiting List");
+      navigate("/waitlist");
+    } catch (error) {
+      toast.err(err?.message || String(err) || "Checkout failed");
+      console.error("Checkout failed:", err);
+    }
   };
 
   const getStatusMessage = () => {
@@ -212,7 +232,7 @@ export default function DeviceDetails() {
                 </Button>
                 <Button
                   className="flex-1 bg-primary text-white cursor-pointer"
-                  onClick={handleCheckout}
+                  onClick={() => setIsCheckout(true)}
                 >
                   Check Out
                 </Button>
@@ -293,6 +313,13 @@ export default function DeviceDetails() {
               </Button>
             )}
           </div>
+
+          <CheckoutDialog
+            isOpen={isCheckout}
+            device={device}
+            onClose={() => setIsCheckout(false)}
+            onConfirm={handleCheckout}
+          />
         </CardContent>
       </Card>
     </div>
