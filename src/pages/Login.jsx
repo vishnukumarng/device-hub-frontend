@@ -24,23 +24,17 @@ export default function Login() {
 
   const loading = useSelector((state) => state.auth.loading);
   const error = useSelector((state) => state.auth.error);
-  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
 
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
       const result = await dispatch(loginThunk({ email, password })).unwrap();
       toast.success("Login Successful");
+      navigate("/scan", { replace: true });
     } catch (error) {
       toast.error(error?.message || String(error) || "Login failed");
     }
   };
-
-  useEffect(() => {
-    if (isAuthenticated) {
-      navigate("/scan", { replace: true });
-    }
-  }, [isAuthenticated, navigate]);
 
   return (
     <Card className="mx-auto w-full max-w-md">

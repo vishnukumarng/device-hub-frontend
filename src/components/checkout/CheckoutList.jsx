@@ -9,6 +9,7 @@ export default function CheckoutList({
   onReturn,
   onExtend,
   onCancel,
+  onCheckout,
 }) {
   if (isLoading) {
     return <LoadingState count={3} />;
@@ -26,8 +27,8 @@ export default function CheckoutList({
 
   console.log("checkouts", checkouts);
 
-  const activeCheckouts = checkouts.filter((c) => c.status === "ACTIVE");
-  // const reservations = checkouts.filter((c) => c.type === "RESERVATION");
+  const activeCheckouts = checkouts.filter((c) => c.type === "CHECKOUT");
+  const reservations = checkouts.filter((c) => c.type === "RESERVATION");
 
   return (
     <div className="space-y-6">
@@ -56,7 +57,7 @@ export default function CheckoutList({
       </div>
 
       {/* Reservations Section */}
-      {/* <div className="space-y-2.5">
+      <div className="space-y-2.5">
         <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider flex items-center gap-1.5 px-0.5">
           <CalendarClock className="w-3.5 h-3.5 text-warning" /> Reservations (
           {reservations.length})
@@ -72,11 +73,12 @@ export default function CheckoutList({
                 key={checkout.id}
                 checkout={checkout}
                 onCancel={onCancel}
+                onCheckout={onCheckout}
               />
             ))}
           </div>
         )}
-      </div> */}
+      </div>
     </div>
   );
 }

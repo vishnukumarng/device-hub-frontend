@@ -12,6 +12,8 @@ export async function joinWaitingList(credentials) {
     return response.data.data;
 }
 
-export async function cancelWaitingList(params) {
-    const response = await api.put(`/reservation/cancel/${params}`)
+export async function cancelWaitingList(id) {
+    const response = await api.put(`/reservation/cancel/${id}`)
+
+    return response.data;
 }
