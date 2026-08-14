@@ -21,9 +21,10 @@ export default function CheckoutListItem({
   onReturn,
   onExtend,
   onCancel,
+  onCheckout,
 }) {
-  const { device, status, startTime, expectedReturnTime } = checkout;
-  const isReservation = status === "RESERVATION";
+  const { device, status, type, startTime, expectedReturnTime } = checkout;
+  const isReservation = type === "RESERVATION";
   const Icon = CATEGORY_ICONS[device?.category?.toUpperCase()] ?? Laptop;
   console.log(checkout);
   // Format date helper
@@ -67,7 +68,17 @@ export default function CheckoutListItem({
         ) : null
       }
     >
-      {!isReservation && (
+      {isReservation ? (
+        <div className="flex gap-2.5 mt-3 pt-2.5 border-t border-border/40">
+          <Button
+            size="sm"
+            className="flex-1 text-xs bg-primary hover:bg-primary/95 text-white"
+            onClick={() => onCheckout?.(checkout)}
+          >
+            Check Out Now
+          </Button>
+        </div>
+      ) : (
         <div className="flex gap-2.5 mt-3 pt-2.5 border-t border-border/40">
           <Button
             variant="outline"

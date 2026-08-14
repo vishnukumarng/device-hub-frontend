@@ -1,12 +1,21 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { bookDevice, fetchCheckouts, returnDevice } from "./checkoutThunk";
+import {
+  bookDevice,
+  fetchCheckouts,
+  returnDevice,
+  reserveDeviceThunk,
+  cancelReservationThunk,
+  claimReservationThunk
+} from "./checkoutThunk";
 
 const initialState = {
     checkouts: [],
     loading: false,
     error: null,
     returning: false,
-    booking: false
+    booking: false,
+    reserving: false,
+    claiming: false
 }
 
 const checkoutSlice = createSlice({
@@ -55,6 +64,42 @@ const checkoutSlice = createSlice({
             })
             .addCase(bookDevice.rejected, (state, action) => {
                 state.booking = false;
+                state.error = action.payload;
+            })
+
+            .addCase(reserveDeviceThunk.pending, (state) => {
+                state.reserving = true;
+                state.error = null;
+            })
+            .addCase(reserveDeviceThunk.fulfilled, (state, action) => {
+                state.reserving = false;
+            })
+            .addCase(reserveDeviceThunk.rejected, (state, action) => {
+                state.reserving = false;
+                state.error = action.payload;
+            })
+
+            .addCase(cancelReservationThunk.pending, (state) => {
+                state.loading = true;
+                state.error = null;
+            })
+            .addCase(cancelReservationThunk.fulfilled, (state, action) => {
+                state.loading = false;
+            })
+            .addCase(cancelReservationThunk.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.payload;
+            })
+
+            .addCase(claimReservationThunk.pending, (state) => {
+                state.claiming = true;
+                state.error = null;
+            })
+            .addCase(claimReservationThunk.fulfilled, (state, action) => {
+                state.claiming = false;
+            })
+            .addCase(claimReservationThunk.rejected, (state, action) => {
+                state.claiming = false;
                 state.error = action.payload;
             });
     }

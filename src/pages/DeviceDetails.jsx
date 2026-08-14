@@ -14,31 +14,23 @@ import Button from "../components/ui/Button";
 import StatusBadge from "../components/common/StatusBadge";
 import DeviceImage from "../components/device/DeviceImage";
 import Card, { CardContent } from "../components/ui/Card";
-import { useApp } from "../context/AppContext";
 import { useDispatch, useSelector } from "react-redux";
 import { getDeviceById } from "../store/device/deviceThunk";
-import { bookDevice, fetchCheckouts } from "../store/checkout/checkoutThunk";
+import { bookDevice, fetchCheckouts, reserveDeviceThunk } from "../store/checkout/checkoutThunk";
 import {
   fetchWaitingList,
   joinWaitingThunk,
 } from "../store/waitlist/waitlistThunk";
 import CheckoutDialog from "../components/checkout/CheckoutDialog";
+import ReserveDialog from "../components/checkout/ReserveDialog";
+import { toast } from "sonner";
 
 export default function DeviceDetails() {
   const { id } = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const {
-    // devices,
-    // checkouts,
-    // waitlist,
-    // checkoutDevice,
-    reserveDevice,
-    // joinWaitlist,
-  } = useApp();
 
   const [isReserving, setIsReserving] = useState(false);
-  const [reserveTime, setReserveTime] = useState("");
   const [isCheckout, setIsCheckout] = useState(false);
 
   useEffect(() => {
@@ -86,23 +78,36 @@ export default function DeviceDetails() {
       await dispatch(
         bookDevice({ deviceId: device.id, expectedReturnTime }),
       ).unwrap();
-      toast.success("Chekcout Successful");
+      toast.success("Checkout Successful");
       navigate("/checkouts");
     } catch (err) {
-      toast.err(err?.message || String(err) || "Checkout failed");
+      toast.error(err?.message || String(err) || "Checkout failed");
       console.error("Checkout failed:", err);
     }
   };
 
-  const handleReserveSubmit = (e) => {
-    e.preventDefault();
-    if (!reserveTime) return;
+  const handleReserveConfirm = async (startTime, durationMinutes) => {
+    try {
+      const isoStartTime = new Date(startTime).toISOString();
+      const expectedReturnTime = new Date(
+        new Date(startTime).getTime() + durationMinutes * 60 * 1000
+      ).toISOString();
 
-    // Convert input time to ISO string
-    const isoTime = new Date(reserveTime).toISOString();
-    reserveDevice(device.id, isoTime);
-    setIsReserving(false);
-    navigate("/checkouts");
+      await dispatch(
+        reserveDeviceThunk({
+          deviceId: device.id,
+          startTime: isoStartTime,
+          expectedReturnTime,
+        })
+      ).unwrap();
+
+      toast.success("Device reserved successfully");
+      setIsReserving(false);
+      navigate("/checkouts");
+    } catch (err) {
+      toast.error(err?.message || String(err) || "Reservation failed");
+      console.error("Reservation failed:", err);
+    }
   };
 
   const handleJoinWaitlist = async (e) => {
@@ -112,8 +117,8 @@ export default function DeviceDetails() {
       toast.success("Added to waiting List");
       navigate("/waitlist");
     } catch (error) {
-      toast.err(err?.message || String(err) || "Checkout failed");
-      console.error("Checkout failed:", err);
+      toast.error(error?.message || String(error) || "Checkout failed");
+      console.error("Checkout failed:", error);
     }
   };
 
@@ -239,49 +244,7 @@ export default function DeviceDetails() {
               </div>
             )}
 
-            {/* Reserve Form */}
-            {isReserving && (
-              <form
-                onSubmit={handleReserveSubmit}
-                className="space-y-3 p-3.5 bg-white/[0.02] border border-border/80 rounded-xl"
-              >
-                <div className="space-y-1.5">
-                  <label
-                    htmlFor="reserveTime"
-                    className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider block"
-                  >
-                    Choose Reservation Time
-                  </label>
-                  <input
-                    type="datetime-local"
-                    id="reserveTime"
-                    required
-                    value={reserveTime}
-                    onChange={(e) => setReserveTime(e.target.value)}
-                    min={new Date().toISOString().slice(0, 16)}
-                    className="w-full h-9 rounded-lg border border-border bg-black/40 px-3 py-1 text-xs text-white focus-visible:outline-none focus-visible:border-primary focus-visible:ring-1 focus-visible:ring-primary"
-                  />
-                </div>
-                <div className="flex gap-2 justify-end">
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    type="button"
-                    onClick={() => setIsReserving(false)}
-                    className="text-xs cursor-pointer"
-                  >
-                    Cancel
-                  </Button>
-                  <Button
-                    size="sm"
-                    type="submit"
-                    className="text-xs bg-primary text-white cursor-pointer"
-                  >
-                    Confirm Reservation
-                  </Button>
-                </div>
-              </form>
-            )}
+
 
             {(status === "IN_USE" || status === "RESERVATION") && (
               <div>
@@ -319,6 +282,13 @@ export default function DeviceDetails() {
             device={device}
             onClose={() => setIsCheckout(false)}
             onConfirm={handleCheckout}
+          />
+
+          <ReserveDialog
+            isOpen={isReserving}
+            device={device}
+            onClose={() => setIsReserving(false)}
+            onConfirm={handleReserveConfirm}
           />
         </CardContent>
       </Card>

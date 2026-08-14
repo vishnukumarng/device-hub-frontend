@@ -1,11 +1,12 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { fetchWaitingList, joinWaitingThunk } from "./waitlistThunk";
+import { fetchWaitingList, joinWaitingThunk, leftWaitingList } from "./waitlistThunk";
 
 const initialState = {
     waitinglist: [],
     loading: false,
     error: null,
-    joining: false
+    joining: false,
+    leaving: false
 }
 
 const reservationSlice = createSlice({
@@ -13,7 +14,7 @@ const reservationSlice = createSlice({
     initialState,
 
     reducers: {
-        clearError(error) {
+        clearError(state) {
             state.error = null
         }
     },
@@ -43,6 +44,21 @@ const reservationSlice = createSlice({
             })
             .addCase(joinWaitingThunk.rejected, (state, action) => {
                 state.joining = false;
+                state.error = action.payload
+            })
+
+            .addCase(leftWaitingList.pending, (state) => {
+                state.leaving = true
+                state.error = null
+            })
+            .addCase(leftWaitingList.fulfilled, (state, action) => {
+                state.leaving = false;
+                state.waitinglist = state.waitinglist.filter(
+                    (entry) => entry.id !== action.meta.arg
+                );
+            })
+            .addCase(leftWaitingList.rejected, (state, action) => {
+                state.leaving = false;
                 state.error = action.payload
             })
     }
