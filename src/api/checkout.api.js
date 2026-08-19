@@ -1,7 +1,7 @@
 import api from "./axios";
 
 export async function checkoutList() {
-    const response = await api.get('/checkout/me')
+    const response = await api.get('/checkout/get-all-list')
 
     return response.data;
 }
@@ -31,4 +31,9 @@ export async function cancelReservation(checkoutId) {
 export async function claimReservation(checkoutId, credentials) {
     const response = await api.post(`/checkout/claim/${checkoutId}`, JSON.stringify(credentials))
     return response.data.data
+}
+
+export async function returnedhistory() {
+    const response = await api.get('/checkout/get-return-list')
+    return response.data
 }

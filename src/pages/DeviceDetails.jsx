@@ -9,6 +9,7 @@ import {
   Calendar,
   Check,
   Clock,
+  CalendarClock,
 } from "lucide-react";
 import Button from "../components/ui/Button";
 import StatusBadge from "../components/common/StatusBadge";
@@ -16,7 +17,11 @@ import DeviceImage from "../components/device/DeviceImage";
 import Card, { CardContent } from "../components/ui/Card";
 import { useDispatch, useSelector } from "react-redux";
 import { getDeviceById } from "../store/device/deviceThunk";
-import { bookDevice, fetchCheckouts, reserveDeviceThunk } from "../store/checkout/checkoutThunk";
+import {
+  bookDevice,
+  fetchCheckouts,
+  reserveDeviceThunk,
+} from "../store/checkout/checkoutThunk";
 import {
   fetchWaitingList,
   joinWaitingThunk,
@@ -90,7 +95,7 @@ export default function DeviceDetails() {
     try {
       const isoStartTime = new Date(startTime).toISOString();
       const expectedReturnTime = new Date(
-        new Date(startTime).getTime() + durationMinutes * 60 * 1000
+        new Date(startTime).getTime() + durationMinutes * 60 * 1000,
       ).toISOString();
 
       await dispatch(
@@ -98,7 +103,7 @@ export default function DeviceDetails() {
           deviceId: device.id,
           startTime: isoStartTime,
           expectedReturnTime,
-        })
+        }),
       ).unwrap();
 
       toast.success("Device reserved successfully");
@@ -137,6 +142,10 @@ export default function DeviceDetails() {
     }
     return null;
   };
+
+  const date = new Date(device?.expectedReturnDate);
+
+  const returnTime = date.toLocaleString("en-US");
 
   return (
     <div className="space-y-5 select-none">
@@ -186,6 +195,19 @@ export default function DeviceDetails() {
                 </span>
               </div>
             </div>
+            {device.status === "IN_USE" && (
+              <div className="flex items-center gap-2 text-muted-foreground">
+                <CalendarClock className="w-3.5 h-3.5 text-warning" />
+                <div className="flex flex-col">
+                  <span className="text-[10px] text-muted-foreground/60 uppercase font-semibold">
+                    Expected Return
+                  </span>
+                  <span className="text-white font-medium truncate">
+                    {returnTime}
+                  </span>
+                </div>
+              </div>
+            )}
             {/* <div className="flex items-center gap-2 text-muted-foreground">
               <MapPin className="w-4 h-4 text-primary/70 shrink-0" />
               <div className="flex flex-col">
@@ -243,8 +265,6 @@ export default function DeviceDetails() {
                 </Button>
               </div>
             )}
-
-
 
             {(status === "IN_USE" || status === "RESERVATION") && (
               <div>
