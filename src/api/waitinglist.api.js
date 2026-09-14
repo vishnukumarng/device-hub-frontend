@@ -1,7 +1,7 @@
 import api from "./axios";
 
 export async function waitingList() {
-    const response = await api.get('/reservation/me')
+    const response = await api.get('/reservation/get-my-list')
 
     return response.data;
 }
