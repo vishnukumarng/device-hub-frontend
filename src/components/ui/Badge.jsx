@@ -7,17 +7,18 @@ export function Badge({ className, variant = "default", ...props }) {
 
   const variants = {
     default:
-      "border-transparent bg-primary text-white shadow hover:bg-primary/80",
+      "border-transparent bg-primary text-primary-foreground shadow-xs hover:bg-primary/90",
     secondary:
-      "border-transparent bg-border text-white hover:bg-border/80",
+      "border-border bg-secondary text-secondary-foreground hover:bg-secondary/80",
     destructive:
-      "border-transparent bg-danger text-white shadow hover:bg-danger/80",
-    outline: "text-white border-border bg-transparent",
+      "border-transparent bg-danger text-white shadow-xs hover:bg-danger/80",
+    outline: "text-foreground border-border bg-card/60 shadow-2xs",
     success:
-      "border-transparent bg-success/20 text-success border border-success/30",
+      "border-emerald-500/20 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border",
     warning:
-      "border-transparent bg-warning/20 text-warning border border-warning/30",
+      "border-amber-500/20 bg-amber-500/10 text-amber-600 dark:text-amber-400 border",
   };
+
 
   return (
     <div className={cn(baseStyles, variants[variant], className)} {...props} />

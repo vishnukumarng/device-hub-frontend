@@ -52,18 +52,18 @@ export default function ReserveDialog({ isOpen, onClose, onConfirm, device }) {
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       {/* Backdrop */}
       <div
-        className="absolute inset-0 bg-black/75 backdrop-blur-sm"
+        className="absolute inset-0 bg-black/40 dark:bg-black/75 backdrop-blur-xs transition-opacity"
         onClick={onClose}
       />
 
       {/* Modal Content */}
-      <div className="relative z-10 w-full max-w-sm bg-card border border-border rounded-xl p-5 shadow-2xl space-y-4 animate-scaleUp">
+      <div className="relative z-10 w-full max-w-sm bg-card border border-border/80 rounded-2xl p-5 md:p-6 shadow-xl space-y-4 animate-scaleUp">
         <div className="space-y-1.5">
-          <h3 className="text-base font-semibold text-white font-sans">
+          <h3 className="text-lg font-bold text-foreground">
             Reserve Device
           </h3>
-          <p className="text-xs text-muted-foreground">
-            Schedule a reservation for <strong className="text-white font-medium">{device?.name}</strong>.
+          <p className="text-xs text-muted-foreground leading-relaxed">
+            Schedule a reservation for <strong className="text-foreground font-semibold">{device?.name}</strong>.
           </p>
         </div>
 
@@ -71,7 +71,7 @@ export default function ReserveDialog({ isOpen, onClose, onConfirm, device }) {
           <div className="space-y-1.5">
             <label
               htmlFor="reserveStartTime"
-              className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider block"
+              className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider block"
             >
               Start Time
             </label>
@@ -81,12 +81,12 @@ export default function ReserveDialog({ isOpen, onClose, onConfirm, device }) {
               required
               value={startTime}
               onChange={(e) => setStartTime(e.target.value)}
-              className="w-full px-3 py-2 text-sm bg-white/[0.02] hover:bg-white/[0.04] focus:bg-white/[0.04] border border-border rounded-lg text-white placeholder-muted-foreground focus:outline-none focus:border-primary/50 transition-colors"
+              className="w-full px-3.5 py-2 text-sm bg-card/60 border border-border/80 rounded-xl text-foreground focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all shadow-xs"
             />
           </div>
 
           <div className="space-y-1.5">
-            <span className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider block">
+            <span className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider block">
               Reservation Duration
             </span>
             <div className="grid grid-cols-2 gap-2">
@@ -95,10 +95,10 @@ export default function ReserveDialog({ isOpen, onClose, onConfirm, device }) {
                   type="button"
                   key={opt.value}
                   onClick={() => setSelectedDuration(opt.value)}
-                  className={`px-3 py-2 text-xs font-medium rounded-lg border text-center transition-all cursor-pointer ${
+                  className={`px-3 py-2.5 text-xs font-semibold rounded-xl border text-center transition-all duration-150 cursor-pointer active:scale-95 ${
                     selectedDuration === opt.value
-                      ? "bg-primary border-primary text-white"
-                      : "border-border bg-white/[0.02] text-muted-foreground hover:text-white hover:bg-white/5"
+                      ? "bg-primary border-primary text-primary-foreground shadow-xs shadow-primary/25"
+                      : "border-border bg-card/60 text-muted-foreground hover:text-foreground hover:bg-muted/80"
                   }`}
                 >
                   {opt.label}
@@ -107,14 +107,14 @@ export default function ReserveDialog({ isOpen, onClose, onConfirm, device }) {
             </div>
           </div>
 
-          <div className="p-3 bg-white/[0.02] border border-border/60 rounded-lg text-xs space-y-1">
-            <div className="flex justify-between">
-              <span className="text-muted-foreground">Projected due time: </span>
-              <span className="text-white font-semibold">{getNewDueTime()}</span>
+          <div className="p-3.5 bg-muted/60 border border-border/80 rounded-xl text-xs space-y-1">
+            <div className="flex justify-between items-center">
+              <span className="text-muted-foreground">Projected return: </span>
+              <span className="text-foreground font-bold">{getNewDueTime()}</span>
             </div>
           </div>
 
-          <div className="flex justify-end gap-2.5 pt-1">
+          <div className="flex justify-end gap-2.5 pt-2">
             <Button
               type="button"
               variant="outline"
@@ -127,7 +127,7 @@ export default function ReserveDialog({ isOpen, onClose, onConfirm, device }) {
             <Button
               type="submit"
               size="sm"
-              className="text-xs bg-primary hover:bg-primary/95 text-white"
+              className="text-xs"
             >
               Confirm Reservation
             </Button>
@@ -137,3 +137,4 @@ export default function ReserveDialog({ isOpen, onClose, onConfirm, device }) {
     </div>
   );
 }
+

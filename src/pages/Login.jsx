@@ -37,17 +37,24 @@ export default function Login() {
   };
 
   return (
-    <Card className="mx-auto w-full max-w-md">
-      <CardHeader className="flex flex-col items-center space-y-2">
-        {/* Placeholder logo */}
-        <div className="h-12 w-12 rounded-full bg-primary/20 flex items-center justify-center text-2xl font-bold text-primary">
-          DH
+    <Card className="mx-auto w-full max-w-md border border-border/80 shadow-xl bg-card/95 backdrop-blur-md">
+      <CardHeader className="flex flex-col items-center space-y-3 pt-8 pb-3">
+        {/* Official Brand Logo */}
+        <div className="flex items-center justify-center p-1">
+          <img
+            src="/logo-full.png"
+            alt="DeviceHub"
+            className="h-16 w-auto max-w-[260px] object-contain drop-shadow-xs select-none transition-transform hover:scale-[1.02]"
+          />
         </div>
-        <CardTitle className="text-2xl">DeviceHub</CardTitle>
-        <p className="text-sm text-muted-foreground">
-          Find and reserve office devices
-        </p>
+        <div className="text-center">
+          <CardTitle className="text-xl font-bold tracking-tight text-foreground">Sign in to your account</CardTitle>
+          <p className="text-xs text-muted-foreground font-medium mt-1">
+            Reserve, manage, and check out office hardware devices
+          </p>
+        </div>
       </CardHeader>
+
       <CardContent>
         <form onSubmit={handleLogin} className="space-y-4">
           <div>

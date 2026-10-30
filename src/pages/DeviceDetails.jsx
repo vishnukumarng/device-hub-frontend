@@ -2,8 +2,6 @@ import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import {
   ChevronLeft,
-  Cpu,
-  MapPin,
   Hash,
   ShieldAlert,
   Calendar,
@@ -11,6 +9,7 @@ import {
   Clock,
   CalendarClock,
 } from "lucide-react";
+
 import Button from "../components/ui/Button";
 import StatusBadge from "../components/common/StatusBadge";
 import DeviceImage from "../components/device/DeviceImage";
@@ -52,7 +51,7 @@ export default function DeviceDetails() {
     return (
       <div className="flex flex-col items-center justify-center text-center py-20">
         <ShieldAlert className="w-12 h-12 text-danger mb-4" />
-        <h2 className="text-base font-bold text-white">Device Not Found</h2>
+        <h2 className="text-lg font-bold text-foreground">Device Not Found</h2>
         <p className="text-xs text-muted-foreground mt-1 mb-6">
           The device may have been removed or ID is invalid.
         </p>
@@ -62,6 +61,7 @@ export default function DeviceDetails() {
       </div>
     );
   }
+
 
   const { status } = device;
 
@@ -150,21 +150,21 @@ export default function DeviceDetails() {
   return (
     <div className="space-y-5 select-none">
       {/* Header and Back Button */}
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-2.5">
         <button
           onClick={() => navigate(-1)}
-          className="w-8 h-8 rounded-full border border-border bg-white/5 flex items-center justify-center text-muted-foreground hover:text-white hover:bg-white/10 hover:border-white/20 transition-all cursor-pointer"
+          className="w-9 h-9 rounded-xl border border-border bg-card/60 backdrop-blur-md flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-muted/80 transition-all cursor-pointer shadow-xs active:scale-95"
           aria-label="Go back"
         >
-          <ChevronLeft className="w-4 h-4" />
+          <ChevronLeft className="w-4.5 h-4.5" />
         </button>
-        <span className="text-xs text-muted-foreground">
+        <span className="text-xs text-muted-foreground font-medium">
           Device Specifications
         </span>
       </div>
 
       {/* Main card */}
-      <Card className="overflow-hidden border-border/80 bg-card">
+      <Card className="overflow-hidden border border-border/80 bg-card shadow-xs">
         {/* Device visual */}
         <DeviceImage category={device.category} className="h-52 w-full" />
 
@@ -172,54 +172,44 @@ export default function DeviceDetails() {
           {/* Title & Badge */}
           <div className="space-y-1">
             <div className="flex items-start justify-between gap-3">
-              <h1 className="text-xl font-bold text-white tracking-tight">
+              <h1 className="text-2xl font-bold text-foreground tracking-tight">
                 {device.name}
               </h1>
               <StatusBadge status={device.status} className="mt-0.5" />
             </div>
-            <p className="text-xs text-muted-foreground capitalize leading-normal">
+            <p className="text-xs text-muted-foreground capitalize font-medium">
               {device.category?.toLowerCase()}
             </p>
           </div>
 
           {/* Quick info row */}
-          <div className="grid grid-cols-2 gap-3.5 py-1 border-y border-border/40 text-xs">
+          <div className="grid grid-cols-2 gap-3.5 py-2 border-y border-border/80 text-xs">
             <div className="flex items-center gap-2 text-muted-foreground">
-              <Hash className="w-4 h-4 text-primary/70 shrink-0" />
+              <Hash className="w-4 h-4 text-primary shrink-0" />
               <div className="flex flex-col">
-                <span className="text-[10px] text-muted-foreground/60 uppercase font-semibold">
+                <span className="text-[10px] text-muted-foreground uppercase font-semibold">
                   Serial Number
                 </span>
-                <span className="text-white font-medium truncate">
-                  {device.serialNumber || "N/A"}
+                <span className="text-foreground font-semibold truncate">
+                  {device.serialNumber || device.serial_no || "N/A"}
                 </span>
               </div>
             </div>
             {device.status === "IN_USE" && (
               <div className="flex items-center gap-2 text-muted-foreground">
-                <CalendarClock className="w-3.5 h-3.5 text-warning" />
+                <CalendarClock className="w-4 h-4 text-amber-500 shrink-0" />
                 <div className="flex flex-col">
-                  <span className="text-[10px] text-muted-foreground/60 uppercase font-semibold">
+                  <span className="text-[10px] text-muted-foreground uppercase font-semibold">
                     Expected Return
                   </span>
-                  <span className="text-white font-medium truncate">
+                  <span className="text-foreground font-semibold truncate">
                     {returnTime}
                   </span>
                 </div>
               </div>
             )}
-            {/* <div className="flex items-center gap-2 text-muted-foreground">
-              <MapPin className="w-4 h-4 text-primary/70 shrink-0" />
-              <div className="flex flex-col">
-                <span className="text-[10px] text-muted-foreground/60 uppercase font-semibold">
-                  Location
-                </span>
-                <span className="text-white font-medium truncate">
-                  {location || "Office"}
-                </span>
-              </div>
-            </div> */}
           </div>
+
 
           {/* Specs List */}
           {/* {specs && specs.length > 0 && (
@@ -241,8 +231,8 @@ export default function DeviceDetails() {
           <div className="space-y-3 pt-2">
             {/* Status alerts */}
             {getStatusMessage() && (
-              <div className="flex items-start gap-2.5 p-3 rounded-lg bg-white/[0.02] border border-border/60 text-xs text-muted-foreground">
-                <ShieldAlert className="w-4 h-4 text-warning shrink-0 mt-0.5" />
+              <div className="flex items-start gap-2.5 p-3.5 rounded-xl bg-muted/60 border border-border/80 text-xs text-foreground font-medium">
+                <ShieldAlert className="w-4 h-4 text-amber-500 shrink-0 mt-0.5" />
                 <p className="leading-relaxed">{getStatusMessage()}</p>
               </div>
             )}
@@ -252,13 +242,13 @@ export default function DeviceDetails() {
               <div className="flex gap-3">
                 <Button
                   variant="outline"
-                  className="flex-1 cursor-pointer"
+                  className="flex-1"
                   onClick={() => setIsReserving(true)}
                 >
                   <Calendar className="w-4 h-4" /> Reserve
                 </Button>
                 <Button
-                  className="flex-1 bg-primary text-white cursor-pointer"
+                  className="flex-1"
                   onClick={() => setIsCheckout(true)}
                 >
                   Check Out
@@ -270,15 +260,14 @@ export default function DeviceDetails() {
               <div>
                 {isAlreadyWaitlisted ? (
                   <Button
-                    className="w-full border-border/60 bg-white/5 text-muted-foreground hover:bg-white/5 hover:text-muted-foreground border cursor-not-allowed"
+                    className="w-full border-border bg-muted text-muted-foreground border cursor-not-allowed"
                     disabled
                   >
-                    <Check className="w-4 h-4 text-success" /> Already On
-                    Waitlist
+                    <Check className="w-4 h-4 text-emerald-500" /> Already On Waitlist
                   </Button>
                 ) : (
                   <Button
-                    className="w-full bg-primary text-white cursor-pointer"
+                    className="w-full"
                     onClick={handleJoinWaitlist}
                   >
                     <Clock className="w-4 h-4" /> Join Waitlist
@@ -289,13 +278,14 @@ export default function DeviceDetails() {
 
             {(status === "MAINTENANCE" || status === "RETIRED") && (
               <Button
-                className="w-full bg-white/5 border border-border text-muted-foreground cursor-not-allowed"
+                className="w-full bg-muted border border-border text-muted-foreground cursor-not-allowed"
                 disabled
               >
                 Unavailable
               </Button>
             )}
           </div>
+
 
           <CheckoutDialog
             isOpen={isCheckout}

@@ -46,7 +46,7 @@ export default function WaitlistListItem({ entry, onCancel, onCheckout }) {
         !isNotified ? (
           <button
             onClick={() => onCancel?.(entry)}
-            className="w-8 h-8 rounded-full flex items-center justify-center hover:bg-white/5 active:bg-white/10 text-muted-foreground hover:text-white transition-colors cursor-pointer"
+            className="w-8 h-8 rounded-xl flex items-center justify-center hover:bg-muted active:scale-95 text-muted-foreground hover:text-foreground transition-all cursor-pointer"
             title="Leave Waitlist"
             aria-label="Leave waitlist"
           >
@@ -54,6 +54,7 @@ export default function WaitlistListItem({ entry, onCancel, onCheckout }) {
           </button>
         ) : null
       }
+
     >
       {isNotified && (
         <div className="flex gap-2.5 mt-3 pt-2.5 border-t border-success/20">

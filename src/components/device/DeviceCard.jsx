@@ -7,41 +7,42 @@ export default function DeviceCard({ device }) {
   const { name, category, status, serialNumber, location, specs } = device;
 
   return (
-    <Card className="overflow-hidden border-border/80 bg-card">
-      <DeviceImage name={name} category={category} className="h-44 w-full" />
-      <CardContent className="p-4 space-y-4">
+    <Card className="overflow-hidden border border-border/80 bg-card shadow-xs">
+      <DeviceImage name={name} category={category} className="h-48 w-full" />
+      <CardContent className="p-5 space-y-4">
         <div>
           <div className="flex items-center justify-between gap-3">
-            <h2 className="text-lg font-bold text-white leading-tight">{name}</h2>
+            <h2 className="text-xl font-bold text-foreground leading-tight">{name}</h2>
             <StatusBadge status={status} />
           </div>
-          <p className="text-xs text-muted-foreground mt-1 capitalize">{category?.toLowerCase()}</p>
+          <p className="text-xs text-muted-foreground mt-1 capitalize font-medium">{category?.toLowerCase()}</p>
         </div>
 
-        <div className="grid grid-cols-2 gap-3 pt-2 border-t border-border/50 text-xs">
+        <div className="grid grid-cols-2 gap-3 pt-3 border-t border-border/80 text-xs">
           <div className="flex items-center gap-2 text-muted-foreground">
-            <Hash className="w-3.5 h-3.5 shrink-0" />
-            <span className="truncate">S/N: <strong className="text-white font-medium">{serialNumber || "N/A"}</strong></span>
+            <Hash className="w-3.5 h-3.5 shrink-0 text-primary" />
+            <span className="truncate">S/N: <strong className="text-foreground font-semibold">{serialNumber || "N/A"}</strong></span>
           </div>
           <div className="flex items-center gap-2 text-muted-foreground">
-            <MapPin className="w-3.5 h-3.5 shrink-0" />
-            <span className="truncate">Loc: <strong className="text-white font-medium">{location || "Office"}</strong></span>
+            <MapPin className="w-3.5 h-3.5 shrink-0 text-primary" />
+            <span className="truncate">Loc: <strong className="text-foreground font-semibold">{location || "Office"}</strong></span>
           </div>
         </div>
 
         {specs && specs.length > 0 && (
-          <div className="pt-3 border-t border-border/50 space-y-2">
-            <h4 className="text-xs font-semibold text-white/80 uppercase tracking-wider flex items-center gap-1.5">
+          <div className="pt-3 border-t border-border/80 space-y-2.5">
+            <h4 className="text-xs font-bold text-foreground uppercase tracking-wider flex items-center gap-1.5">
               <Cpu className="w-3.5 h-3.5 text-primary" /> Specifications
             </h4>
-            <ul className="grid grid-cols-1 gap-1.5 pl-5 list-disc text-xs text-muted-foreground">
+            <ul className="grid grid-cols-1 gap-2 pl-4 list-disc text-xs text-muted-foreground">
               {specs.map((spec, i) => (
-                <li key={i}>{spec}</li>
+                <li key={i} className="leading-relaxed">{spec}</li>
               ))}
             </ul>
           </div>
         )}
       </CardContent>
     </Card>
+
   );
 }

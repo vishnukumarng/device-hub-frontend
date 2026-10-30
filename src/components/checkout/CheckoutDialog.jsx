@@ -22,17 +22,17 @@ export default function CheckoutDialog({ isOpen, onClose, onConfirm, device }) {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       <div
-        className="absolute inset-0 bg-black/75 backdrop-blur-sm"
+        className="absolute inset-0 bg-black/40 dark:bg-black/75 backdrop-blur-xs transition-opacity"
         onClick={onClose}
       />
-      <div className="relative z-10 w-full max-w-sm bg-card border border-border rounded-xl p-5 shadow-2xl space-y-4 animate-scaleUp">
+      <div className="relative z-10 w-full max-w-sm bg-card border border-border/80 rounded-2xl p-5 md:p-6 shadow-xl space-y-4 animate-scaleUp">
         <div className="space-y-1.5">
-          <h3 className="text-base font-semibold text-white font-sans">
-            Checkout
+          <h3 className="text-lg font-bold text-foreground">
+            Checkout Device
           </h3>
-          <p className="text-xs text-muted-foreground">
+          <p className="text-xs text-muted-foreground leading-relaxed">
             Choose how long you need{" "}
-            <strong className="text-white font-medium">{device?.name}</strong>.
+            <strong className="text-foreground font-semibold">{device?.name}</strong>.
           </p>
         </div>
 
@@ -41,10 +41,10 @@ export default function CheckoutDialog({ isOpen, onClose, onConfirm, device }) {
             <button
               key={opt.value}
               onClick={() => setSelectedDuration(opt.value)}
-              className={`px-3 py-2 text-xs font-medium rounded-lg border text-center transition-all cursor-pointer ${
+              className={`px-3 py-2.5 text-xs font-semibold rounded-xl border text-center transition-all duration-150 cursor-pointer active:scale-95 ${
                 selectedDuration === opt.value
-                  ? "bg-primary border-primary text-white"
-                  : "border-border bg-white/[0.02] text-muted-foreground hover:text-white hover:bg-white/5"
+                  ? "bg-primary border-primary text-primary-foreground shadow-xs shadow-primary/25"
+                  : "border-border bg-card/60 text-muted-foreground hover:text-foreground hover:bg-muted/80"
               }`}
             >
               {opt.label}
@@ -52,12 +52,12 @@ export default function CheckoutDialog({ isOpen, onClose, onConfirm, device }) {
           ))}
         </div>
 
-        <div className="p-3 bg-white/[0.02] border border-border/60 rounded-lg text-xs">
-          <span className="text-muted-foreground">Projected due time: </span>
-          <span className="text-white font-semibold">{getNewDueTime()}</span>
+        <div className="p-3.5 bg-muted/60 border border-border/80 rounded-xl text-xs flex items-center justify-between">
+          <span className="text-muted-foreground">Projected return: </span>
+          <span className="text-foreground font-bold">{getNewDueTime()}</span>
         </div>
 
-        <div className="flex justify-end gap-2.5 pt-1">
+        <div className="flex justify-end gap-2.5 pt-2">
           <Button
             variant="outline"
             size="sm"
@@ -72,7 +72,7 @@ export default function CheckoutDialog({ isOpen, onClose, onConfirm, device }) {
               onConfirm(selectedDuration);
               onClose();
             }}
-            className="text-xs bg-primary hover:bg-primary/95 text-white"
+            className="text-xs"
           >
             Confirm Checkout
           </Button>
@@ -81,3 +81,4 @@ export default function CheckoutDialog({ isOpen, onClose, onConfirm, device }) {
     </div>
   );
 }
+

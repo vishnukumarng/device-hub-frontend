@@ -59,7 +59,7 @@ export default function CheckoutListItem({
         isReservation ? (
           <button
             onClick={() => onCancel?.(checkout)}
-            className="w-8 h-8 rounded-full flex items-center justify-center hover:bg-white/5 active:bg-white/10 text-muted-foreground hover:text-white transition-colors cursor-pointer"
+            className="w-8 h-8 rounded-xl flex items-center justify-center hover:bg-muted active:scale-95 text-muted-foreground hover:text-foreground transition-all cursor-pointer"
             title="Cancel Reservation"
             aria-label="Cancel reservation"
           >
@@ -69,15 +69,16 @@ export default function CheckoutListItem({
       }
     >
       {isReservation ? (
-        <div className="flex gap-2.5 mt-3 pt-2.5 border-t border-border/40">
+        <div className="flex gap-2.5 mt-3 pt-2.5 border-t border-border/80">
           <Button
             size="sm"
-            className="flex-1 text-xs bg-primary hover:bg-primary/95 text-white"
+            className="flex-1 text-xs"
             onClick={() => onCheckout?.(checkout)}
           >
             Check Out Now
           </Button>
         </div>
+
       ) : (
         <div className="flex gap-2.5 mt-3 pt-2.5 border-t border-border/40">
           <Button

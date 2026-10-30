@@ -9,8 +9,9 @@ export default function SearchBar({ value, onChange, placeholder = "Search devic
         value={value}
         onChange={onChange}
         placeholder={placeholder}
-        className="pl-10 h-10 bg-white/[0.03] border-border/80 focus-visible:bg-black/30 placeholder:text-muted-foreground/60 transition-colors"
+        className="pl-10 h-10.5 rounded-xl bg-card/60 backdrop-blur-xs border-border/80 focus-visible:bg-card focus-visible:border-primary shadow-xs transition-all"
       />
     </div>
   );
 }
+

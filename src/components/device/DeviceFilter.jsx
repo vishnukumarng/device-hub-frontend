@@ -18,10 +18,10 @@ export default function DeviceFilter({
             key={category}
             onClick={() => onSelectCategory?.(category)}
             className={cn(
-              "px-3.5 py-1.5 text-xs font-semibold rounded-full border transition-all shrink-0 cursor-pointer",
+              "px-3.5 py-1.5 text-xs font-semibold rounded-full border transition-all duration-150 shrink-0 cursor-pointer active:scale-95",
               selectedCategory === category
-                ? "bg-primary border-primary text-white shadow-sm"
-                : "border-border bg-white/[0.02] text-muted-foreground hover:text-white hover:bg-white/5"
+                ? "bg-primary border-primary text-primary-foreground shadow-xs shadow-primary/25"
+                : "border-border bg-card/60 text-muted-foreground hover:text-foreground hover:bg-muted/80"
             )}
           >
             {category === "ALL" ? "All Devices" : category.charAt(0) + category.slice(1).toLowerCase() + "s"}
@@ -36,15 +36,16 @@ export default function DeviceFilter({
             key={status}
             onClick={() => onSelectStatus?.(status)}
             className={cn(
-              "px-3.5 py-1.5 text-xs font-semibold rounded-full border transition-all shrink-0 cursor-pointer",
+              "px-3.5 py-1.5 text-xs font-semibold rounded-full border transition-all duration-150 shrink-0 cursor-pointer active:scale-95",
               selectedStatus === status
-                ? "bg-white text-black border-white shadow-sm"
-                : "border-border bg-white/[0.02] text-muted-foreground hover:text-white hover:bg-white/5"
+                ? "bg-foreground text-background border-foreground shadow-xs"
+                : "border-border bg-card/60 text-muted-foreground hover:text-foreground hover:bg-muted/80"
             )}
           >
             {status === "ALL" ? "All Statuses" : status.split("_").map(w => w.charAt(0) + w.slice(1).toLowerCase()).join(" ")}
           </button>
         ))}
+
       </div>
     </div>
   );

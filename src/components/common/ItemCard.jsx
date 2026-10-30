@@ -3,8 +3,8 @@ import Card from "../ui/Card";
 
 export default function ItemCard({
   icon: Icon,
-  iconBgColor = "bg-white/5",
-  iconColor = "text-muted-foreground",
+  iconBgColor = "bg-muted text-muted-foreground border-border/60",
+  iconColor,
   title,
   subtitle,
   badge,
@@ -13,13 +13,11 @@ export default function ItemCard({
   className,
   children,
 }) {
-  const CardWrapper = onClick ? "button" : "div";
-
   return (
     <Card
       className={cn(
-        "w-full text-left overflow-hidden border border-border bg-card p-3.5 transition-all duration-200",
-        onClick && "cursor-pointer hover:bg-white/[0.02] hover:border-white/10 active:scale-[0.99]",
+        "w-full text-left overflow-hidden border border-border/80 bg-card p-4 transition-all duration-200 shadow-xs",
+        onClick && "cursor-pointer hover:bg-muted/40 hover:border-primary/30 hover:shadow-sm active:scale-[0.995]",
         className
       )}
       onClick={onClick}
@@ -28,7 +26,7 @@ export default function ItemCard({
         {Icon && (
           <div
             className={cn(
-              "w-10 h-10 rounded-lg flex items-center justify-center shrink-0 border border-border/40",
+              "w-10 h-10 rounded-xl flex items-center justify-center shrink-0 border transition-colors",
               iconBgColor
             )}
           >
@@ -38,7 +36,7 @@ export default function ItemCard({
 
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2">
-            <h4 className="text-sm font-semibold text-white truncate">{title}</h4>
+            <h4 className="text-sm font-bold text-foreground truncate">{title}</h4>
             {badge && <div className="shrink-0">{badge}</div>}
           </div>
           {subtitle && (
@@ -58,3 +56,4 @@ export default function ItemCard({
     </Card>
   );
 }
+
